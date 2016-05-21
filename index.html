@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>AR Photoshoot</title>
+  <script src="js/tracking-min.js"></script>
+  <script src="js/data/face-min.js"></script>
+
+  <style>
+  video, canvas {
+    position: absolute;
+  }
+  </style>
+</head>
+<body>
+  <div id="screen">
+    <video id="video" width="600" height="600" preload autoplay loop muted></video>
+    <canvas id="canvas" width="600" height="600"></canvas>
+  </div>
+
+  <script type="text/javascript">
+    window.onload = function(){
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+      var tracker = new tracking.ObjectTracker('face');
+      tracker.setInitialScale(4);
+      tracker.setStepSize(2);
+      tracker.setEdgesDensity(0.1);
+
+      tracker.on('track', function(e){
+        e.data.forEach(function(rect){
+          context.clearRect(0, 0, canvas.width, canvas.height)
+          context.strokeStyle = 'red';
+          context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+        });
+      });
+
+      tracking.track('#video', tracker, { camera: true });
+    }
+  </script>
+</body>
+</html>
