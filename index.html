@@ -7,9 +7,8 @@
   <script src="js/data/face-min.js"></script>
 
   <style>
-  video, canvas {
-    position: absolute;
-  }
+  video, canvas { position: absolute;}
+  #mask{ display: none; }
   </style>
 </head>
 <body>
@@ -17,26 +16,27 @@
     <video id="video" width="600" height="600" preload autoplay loop muted></video>
     <canvas id="canvas" width="600" height="600"></canvas>
   </div>
-
+  <img src="images/mask.gif" id="mask">
   <script type="text/javascript">
     window.onload = function(){
       var video = document.getElementById('video');
       var canvas = document.getElementById('canvas');
       var context = canvas.getContext('2d');
-      var tracker = new tracking.ObjectTracker('face');
-      tracker.setInitialScale(4);
-      tracker.setStepSize(2);
-      tracker.setEdgesDensity(0.1);
-
-      tracker.on('track', function(e){
+      var mask = document.getElementById('mask');
+      var trackerFace = new tracking.ObjectTracker('face');
+      trackerFace.setInitialScale(4);
+      trackerFace.setStepSize(2);
+      trackerFace.setEdgesDensity(0.1);
+      trackerFace.on('track', function(e){
         e.data.forEach(function(rect){
-          context.clearRect(0, 0, canvas.width, canvas.height)
-          context.strokeStyle = 'red';
-          context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(mask, rect.x, rect.y, rect.width, rect.height);
+          //context.strokeStyle = 'red';
+          //context.strokeRect(rect.x, rect.y, rect.width, rect.height);
         });
       });
+      tracking.track('#video', trackerFace, { camera: true });
 
-      tracking.track('#video', tracker, { camera: true });
     }
   </script>
 </body>
