@@ -1,43 +1,63 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>AR Photoshoot</title>
-  <script src="js/tracking-min.js"></script>
-  <script src="js/data/face-min.js"></script>
+	<meta charset="utf-8">
+	<title>AR Photoshoot</title>
+	<script src="js/ccv.js"></script>
+	<script src="js/ccv-face.js"></script>
 
-  <style>
-  video, canvas { position: absolute;}
-  #mask{ display: none; }
-  </style>
+	<style>
+	video, canvas { position: absolute;}
+	#mask, #video{ display: none; }
+	</style>
 </head>
 <body>
-  <div id="screen">
-    <video id="video" width="600" height="600" preload autoplay loop muted></video>
-    <canvas id="canvas" width="600" height="600"></canvas>
-  </div>
-  <img src="images/mask.gif" id="mask">
-  <script type="text/javascript">
-    window.onload = function(){
-      var video = document.getElementById('video');
-      var canvas = document.getElementById('canvas');
-      var context = canvas.getContext('2d');
-      var mask = document.getElementById('mask');
-      var trackerFace = new tracking.ObjectTracker('face');
-      trackerFace.setInitialScale(4);
-      trackerFace.setStepSize(2);
-      trackerFace.setEdgesDensity(0.1);
-      trackerFace.on('track', function(e){
-        e.data.forEach(function(rect){
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          context.drawImage(mask, rect.x, rect.y, rect.width, rect.height);
-          //context.strokeStyle = 'red';
-          //context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-        });
-      });
-      tracking.track('#video', trackerFace, { camera: true });
+	<div id="screen">
+		<video id="video" width="600" height="600" autoplay loop></video>
+		<canvas id="canvas" width="600" height="600"></canvas>
+	</div>
+	<img src="images/mask.gif" id="mask">
+	<script type="text/javascript">
+		window.onload = function(){
+			// getting elements
+			video = document.getElementById('video');
+			canvas = document.getElementById('canvas');
+			context = canvas.getContext('2d');
+			mask = document.getElementById('mask');
 
-    }
-  </script>
+			// accessing user camera for video
+			navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+			if(navigator.getUserMedia){
+				navigator.getUserMedia({video: true}, function(stream){
+					video.src = window.URL.createObjectURL(stream);
+				}, errorCallback);
+			}
+
+			// adding event to draw on canvas
+			video.addEventListener('play', function(){
+				setInterval(put_mask, 50);
+			});
+		}
+	 
+		// reference - http://wesbos.com/html5-video-face-detection-canvas-javascript/
+		function put_mask() {
+			//console.log(video);
+			context.drawImage(video, 0, 0, video.width, video.height);
+			var comp = ccv.detect_objects({
+				'canvas' : (ccv.pre(canvas)),
+				'cascade' : cascade,
+				'interval' : 5,
+				'min_neighbors' : 1
+			});
+			for (var i = 0; i < comp.length; i++) {
+				//console.log(comp[i].x);
+				context.drawImage(mask, comp[i].x, comp[i].y, comp[i].width, comp[i].height);
+			}
+		}
+
+		function errorCallback(){
+			// error in loading
+		}
+	</script>
 </body>
 </html>
