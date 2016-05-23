@@ -5,12 +5,10 @@
 	<title>AR Photobooth</title>
 	<script src="js/objectdetect.js"></script>
 	<script src="js/objectdetect.frontalface.js"></script>
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery.objectdetect.js"></script>
 
 	<style>
 	video, canvas { position: absolute;}
-	#mask{ display: none; }
+	#mask, #video{ display: none; }
 	</style>
 </head>
 <body>
@@ -26,9 +24,22 @@
 			var context = canvas.getContext('2d');
 			var mask = document.getElementById('mask');
 			
-			$("#image").objectdetect("all", {classifier: objectdetect.frontalface}, function(coords) {
-				console.log(coords);
+			// accessing user camera for video
+			navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+			if(navigator.getUserMedia){
+				navigator.getUserMedia({video: true}, function(stream){
+					video.src = window.URL.createObjectURL(stream);
+				}, errorCallback);
+			}
+			function errorCallback(){ }
+
+			// adding event to draw on canvas
+			video.addEventListener('play', function(){
+				setInterval(function(){
+					context.drawImage(video, 0, 0, video.width, video.height);
+				}, 100);
 			});
+
 
 		}
 	</script>
