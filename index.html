@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>AR Photoshoot</title>
-  <script src="js/tracking-min.js"></script>
-  <script src="js/data/face-min.js"></script>
+  <script src="js/headtrackr.js"></script>
 
   <style>
   video, canvas { position: absolute;}
-  #mask{ display: none; }
+  #mask, #video{ display: none; }
   </style>
 </head>
 <body>
@@ -23,20 +22,14 @@
       var canvas = document.getElementById('canvas');
       var context = canvas.getContext('2d');
       var mask = document.getElementById('mask');
-      var trackerFace = new tracking.ObjectTracker('face');
-      trackerFace.setInitialScale(4);
-      trackerFace.setStepSize(2);
-      trackerFace.setEdgesDensity(0.1);
-      trackerFace.on('track', function(e){
-        e.data.forEach(function(rect){
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          context.drawImage(mask, rect.x, rect.y, rect.width, rect.height);
-          //context.strokeStyle = 'red';
-          //context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-        });
-      });
-      tracking.track('#video', trackerFace, { camera: true });
+     
+      var head = new headtrackr.Tracker();
+      head.init(video, canvas);
+      head.start();
 
+      document.addEventListener('facetrackingEvent', function(e){
+      		context.drawImage(mask, e.x - (e.width/2), e.y - (e.height/2), e.width, e.height);
+      });
     }
   </script>
 </body>
