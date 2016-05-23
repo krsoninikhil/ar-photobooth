@@ -1,43 +1,36 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>AR Photoshoot</title>
-  <script src="js/tracking-min.js"></script>
-  <script src="js/data/face-min.js"></script>
+	<meta charset="utf-8">
+	<title>AR Photobooth</title>
+	<script src="js/objectdetect.js"></script>
+	<script src="js/objectdetect.frontalface.js"></script>
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.objectdetect.js"></script>
 
-  <style>
-  video, canvas { position: absolute;}
-  #mask{ display: none; }
-  </style>
+	<style>
+	video, canvas { position: absolute;}
+	#mask{ display: none; }
+	</style>
 </head>
 <body>
-  <div id="screen">
-    <video id="video" width="600" height="600" preload autoplay loop muted></video>
-    <canvas id="canvas" width="600" height="600"></canvas>
-  </div>
-  <img src="images/mask.gif" id="mask">
-  <script type="text/javascript">
-    window.onload = function(){
-      var video = document.getElementById('video');
-      var canvas = document.getElementById('canvas');
-      var context = canvas.getContext('2d');
-      var mask = document.getElementById('mask');
-      var trackerFace = new tracking.ObjectTracker('face');
-      trackerFace.setInitialScale(4);
-      trackerFace.setStepSize(2);
-      trackerFace.setEdgesDensity(0.1);
-      trackerFace.on('track', function(e){
-        e.data.forEach(function(rect){
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          context.drawImage(mask, rect.x, rect.y, rect.width, rect.height);
-          //context.strokeStyle = 'red';
-          //context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-        });
-      });
-      tracking.track('#video', trackerFace, { camera: true });
+	<div id="screen">
+		<video id="video" width="600" height="600" preload autoplay loop muted></video>
+		<canvas id="canvas" width="600" height="600"></canvas>
+	</div>
+	<img src="images/glasses.png" id="mask">
+	<script type="text/javascript">
+		window.onload = function(){
+			var video = document.getElementById('video');
+			var canvas = document.getElementById('canvas');
+			var context = canvas.getContext('2d');
+			var mask = document.getElementById('mask');
+			
+			$("#image").objectdetect("all", {classifier: objectdetect.frontalface}, function(coords) {
+				console.log(coords);
+			});
 
-    }
-  </script>
+		}
+	</script>
 </body>
 </html>
