@@ -2,9 +2,9 @@
 
 Many open and free libraries are available for object detection and tracking on web, most of them are based on ccv.js. Here I'm just trying out some of them to compare the results. So far [js-objectdetect](https://github.com/mtschirs/js-objectdetect) seems best fit which is used in `master` branch only. Following other libraries are implemented in correspondly named branches of this repo:
 
-	- [ccv.js](https://github.com/liuliu/ccv)
-	- [headtrackr.js](https://github.com/auduno/headtrackr)
-	- [tracking.js](https://github.com/eduardolundgren/trackingjs.com)
+- [ccv.js](https://github.com/liuliu/ccv)
+- [headtrackr.js](https://github.com/auduno/headtrackr)
+- [tracking.js](https://github.com/eduardolundgren/trackingjs.com)
 
 To test, these files needs to be on a server, may be localhost.
 
