@@ -11,6 +11,9 @@
 	#canvas{ display: none; }
 	#box{ border: 1px solid red; height: 10px; width: 10px; }
 	.overlay{ position: absolute; transition: all 0.1s ease-in-out; opacity: 0; }
+	#options{ position: absolute; bottom: 0;}
+	.option{ float: left; width: 100px; border: 1px solid #343434;  margin-left: 20px;}
+	#options h3{ margin-left: 20px; }
 	</style>
 </head>
 <body>
@@ -19,6 +22,11 @@
 		<canvas id="canvas"></canvas>
 		<div id="box" class="overlay"></div>
 		<img src="images/g2.png" id="mask" class="overlay">
+	</div>
+	<div id="options">
+		<h3>Select any object:</h3>
+		<img src="images/glasses.png" class="option">
+		<img src="images/g2.png" class="option">
 	</div>
 	<script type="text/javascript">
 		
@@ -57,7 +65,7 @@
 				if(comp.length > 0){
 					for (var i = 0; i < comp.length; i++) {
 						s = video.videoWidth / 60;
-						console.log(comp[i].y);
+						//console.log(comp[i].y);
 						mask.style.opacity = 1;
 						mask.style.left = (comp[i].x*s - comp[i].width*s*0.08 + video.offsetLeft) + 'px';
 						mask.style.top = (comp[i].y*s + comp[i].height*s*0.47 + video.offsetTop) + 'px';
@@ -68,6 +76,16 @@
 				}
 
 				requestAnimationFrame(put_mask);
+			}
+
+			// to handle options
+			var options = document.getElementsByClassName('option');
+			for (var i = 0; i < options.length; i++) {
+				console.log(options[i]);
+				options[i].addEventListener('click', function(){
+					console.log(this.getAttribute('src'));
+					mask.src = this.getAttribute('src');
+				});
 			}
 		}
 	</script>
