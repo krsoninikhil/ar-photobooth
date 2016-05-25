@@ -30,13 +30,11 @@
 			if(navigator.getUserMedia){
 				navigator.getUserMedia({video: true}, function(stream){
 					video.src = window.URL.createObjectURL(stream);
-				}, errorCallback);
+				}, function(){});
 			}
 
 			// adding event to draw on canvas
-			video.addEventListener('play', function(){
-				setInterval(put_mask, 50);
-			});
+			video.addEventListener('play', put_mask);
 		}
 	 
 		// reference - http://wesbos.com/html5-video-face-detection-canvas-javascript/
@@ -53,10 +51,7 @@
 				//console.log(comp[i].x);
 				context.drawImage(mask, comp[i].x, comp[i].y, comp[i].width, comp[i].height);
 			}
-		}
-
-		function errorCallback(){
-			// error in loading
+			requestAnimationFrame(put_mask);
 		}
 	</script>
 </body>
