@@ -18,12 +18,14 @@
 	</div>
 	<img src="images/mask.gif" id="mask">
 	<script type="text/javascript">
+		
 		window.onload = function(){
 			// getting elements
-			video = document.getElementById('video');
-			canvas = document.getElementById('canvas');
-			context = canvas.getContext('2d');
-			mask = document.getElementById('mask');
+			var video = document.getElementById('video'),
+			canvas = document.getElementById('canvas'),
+			context = canvas.getContext('2d'),
+			mask = document.getElementById('mask'),
+			comp;
 
 			// accessing user camera for video
 			navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -35,23 +37,23 @@
 
 			// adding event to draw on canvas
 			video.addEventListener('play', put_mask);
-		}
 	 
-		// reference - http://wesbos.com/html5-video-face-detection-canvas-javascript/
-		function put_mask() {
-			//console.log(video);
-			context.drawImage(video, 0, 0, video.width, video.height);
-			var comp = ccv.detect_objects({
-				'canvas' : (ccv.pre(canvas)),
-				'cascade' : cascade,
-				'interval' : 5,
-				'min_neighbors' : 1
-			});
-			for (var i = 0; i < comp.length; i++) {
-				//console.log(comp[i].x);
-				context.drawImage(mask, comp[i].x, comp[i].y, comp[i].width, comp[i].height);
+			// reference - http://wesbos.com/html5-video-face-detection-canvas-javascript/
+			function put_mask() {
+				//console.log(video);
+				context.drawImage(video, 0, 0, video.width, video.height);
+				comp = ccv.detect_objects({
+					'canvas' : (ccv.pre(canvas)),
+					'cascade' : cascade,
+					'interval' : 5,
+					'min_neighbors' : 1
+				});
+				for (var i = 0; i < comp.length; i++) {
+					//console.log(comp[i].x);
+					context.drawImage(mask, comp[i].x, comp[i].y, comp[i].width, comp[i].height);
+				}
+				requestAnimationFrame(put_mask);
 			}
-			requestAnimationFrame(put_mask);
 		}
 	</script>
 </body>
