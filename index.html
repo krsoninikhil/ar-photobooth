@@ -7,16 +7,19 @@
 	<script src="js/ccv-face.js"></script>
 
 	<style>
-	video, canvas { position: absolute;}
-	#mask, #video{ display: none; }
+	video, canvas{ position: absolute;}
+	#canvas{ display: none; }
+	#box{ border: 1px solid red; height: 10px; width: 10px; }
+	.overlay{ position: absolute; transition: all 0.1s ease-in-out; opacity: 0; }
 	</style>
 </head>
 <body>
 	<div id="screen">
 		<video id="video" width="600" height="600" autoplay loop></video>
-		<canvas id="canvas" width="600" height="600"></canvas>
+		<canvas id="canvas"></canvas>
+		<div id="box" class="overlay"></div>
+		<img src="images/g2.png" id="mask" class="overlay">
 	</div>
-	<img src="images/mask.gif" id="mask">
 	<script type="text/javascript">
 		
 		window.onload = function(){
@@ -25,6 +28,7 @@
 			canvas = document.getElementById('canvas'),
 			context = canvas.getContext('2d'),
 			mask = document.getElementById('mask'),
+			box = document.getElementById('box'),
 			comp;
 
 			// accessing user camera for video
@@ -41,17 +45,28 @@
 			// reference - http://wesbos.com/html5-video-face-detection-canvas-javascript/
 			function put_mask() {
 				//console.log(video);
-				context.drawImage(video, 0, 0, video.width, video.height);
+				var f = video.videoHeight / video.videoWidth;
+				context.drawImage(video, 0, 0, 60, 60 * f);
 				comp = ccv.detect_objects({
 					'canvas' : (ccv.pre(canvas)),
 					'cascade' : cascade,
-					'interval' : 5,
+					'interval' : 1,
 					'min_neighbors' : 1
 				});
-				for (var i = 0; i < comp.length; i++) {
-					//console.log(comp[i].x);
-					context.drawImage(mask, comp[i].x, comp[i].y, comp[i].width, comp[i].height);
+
+				if(comp.length > 0){
+					for (var i = 0; i < comp.length; i++) {
+						s = video.videoWidth / 60;
+						console.log(comp[i].y);
+						mask.style.opacity = 1;
+						mask.style.left = (comp[i].x*s - comp[i].width*s*0.08 + video.offsetLeft) + 'px';
+						mask.style.top = (comp[i].y*s + comp[i].height*s*0.47 + video.offsetTop) + 'px';
+						mask.style.width = (comp[i].width*s*1) + 'px';
+					}
+				} else{
+					mask.style.opacity = 0;
 				}
+
 				requestAnimationFrame(put_mask);
 			}
 		}
