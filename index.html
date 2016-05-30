@@ -11,6 +11,7 @@
 			.option{ float: left; width: 100px; border: 1px solid #343434;  margin-left: 20px;}
 			#options h3{ margin-left: 20px; }
 			#video{ display: none; }
+			#canvas{ margin-left: 250px; }
 		 </style>
 	</head>
 	<body>
@@ -47,7 +48,7 @@
 				canvas = document.getElementById('canvas'),
 				context = canvas.getContext('2d'),
 				detector, eyeDetector, face, preCoordi = preLeftEye =  preRightEye = [0, 0, 0, 0],
-				 MIN_FACE_CHANGE = 2, MIN_EYE_CHANGE = 5, MIN_FACE_CONFI = 5, MIN_EYE_CONFI = 2;
+				 MIN_FACE_CHANGE = 1, MIN_EYE_CHANGE = 5, MIN_FACE_CONFI = 4, MIN_EYE_CONFI = 2;
 
 				navigator.getUserMedia({video: true}, function (stream) {
 					video.src = window.URL.createObjectURL(stream);
@@ -83,22 +84,22 @@
 								faceX = coords[0][0] * wFactor,
 								faceY = coords[0][1] * hFactor;
 
-								if (!eyeDetector){
+								/*if (!eyeDetector){
 									eyeDetector = new objectdetect.detector((60 * faceWidth / faceHeight), 60, 1.1, objectdetect.eye);
 								}
 								eyes = eyeDetector.detect(canvas, 1, 1, [faceX, faceY, faceWidth, faceHeight]);
 								//console.log(eyes);
 
 								// if eyes are detected
-								if ((eyes.length == 1 || eyes.length == 2) && eyes[0][4] > MIN_EYE_CONFI && eyes[0][0] < eyes[0][2] / 2){
+								if (eyes.length > 1 && (Math.abs(eyes[0][0] - preLeftEye[0]) > MIN_EYE_CHANGE || Math.abs(eyes[0][1] - preLeftEye[1])) > MIN_EYE_CHANGE){
+									preLeftEye = eyes[0];
+									if (eyes.length == 2) preRightEye = eyes[1];
+								} else{
+									if (preLeftEye[0] != 0) eyes[0] = preLeftEye;
+									if (preRightEye[0] != 0) eyes[1] = preRightEye;
+								}
 
-									if (Math.abs(eyes[0][0] - preLeftEye[0]) > MIN_EYE_CHANGE || Math.abs(eyes[0][1] - preLeftEye[1]) > MIN_EYE_CHANGE){
-										preLeftEye = eyes[0];
-										if (eyes.length == 2) preRightEye = eyes[1];
-									} else{
-										eyes[0] = preLeftEye;
-										//eyes[1] = preRightEye;
-									}
+								if ((eyes.length == 1 || eyes.length == 2) && eyes[0][4] > MIN_EYE_CONFI && eyes[0][0] < eyes[0][2] / 2){
 									
 									var wf = faceWidth / eyeDetector.canvas.width,
 									hf = faceHeight / eyeDetector.canvas.height,
@@ -112,9 +113,9 @@
 										angle = 0;
 									}
 									context.rotate(angle);
-									//context.drawImage(box, faceX + eyes[0][0]*wf, faceY + eyes[0][1]*hf, faceWidth*0.75, eyes[0][2]*hf);
-									context.rect(faceX + eyes[0][0]*wf, faceY + eyes[0][1]*hf , faceWidth*0.75, eyes[0][3]*hf);
-									context.stroke();
+									context.drawImage(box, faceX + eyes[0][0]*wf, faceY + eyes[0][1]*hf, faceWidth*0.75, eyes[0][2]*hf);
+									// context.rect(faceX + eyes[0][0]*wf, faceY + eyes[0][1]*hf , faceWidth*0.75, eyes[0][3]*hf);
+									// context.stroke();
 									context.rotate(-angle);
 									
 									// to draw boxes around detected eyes
@@ -125,13 +126,11 @@
 
 								// if only right eye or no eyes are detect
 								} else{
-									//context.drawImage(box, video.offsetLeft + faceX + 0.125 * faceWidth, video.offsetTop + faceY + 0.31 * faceHeight, faceWidth * 0.75, faceWidth * 0.75 * box.height / box.width)
-								}
+								}*/
+								context.drawImage(box, video.offsetLeft + faceX + 0.125 * faceWidth, video.offsetTop + faceY + 0.31 * faceHeight, faceWidth * 0.75, faceWidth * 0.75 * box.height / box.width);
 								// to draw a box	
-								context.rect(faceX, faceY, faceWidth, faceHeight);
-								context.stroke();
-							} else{
-								//box.style.opacity = 0;
+								// context.rect(faceX, faceY, faceWidth, faceHeight);
+								// context.stroke();
 							}						
 					}
 					requestAnimationFrame(draw);
