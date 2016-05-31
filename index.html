@@ -1,156 +1,52 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		 <title>AR Photobooth</title>
-		 <style>
-			html, body{ margin: 0; padding: 0; }
-			video, .overlay{ position: absolute; top: 0; left: 0; }
-			#box{ border: 1px solid red; height: 10px; width: 10px; }
-			.overlay{ opacity: 0; z-index: 5; transition: all 0.05s ease-in-out;}
-			#options{ position: absolute; right: 0;}
-			.option{ float: left; width: 100px; border: 1px solid #343434;  margin-left: 20px;}
-			#options h3{ margin-left: 20px; }
-			#video{ display: none; }
-			#canvas{ margin-left: 250px; }
-		 </style>
-	</head>
-	<body>
-		<video id="video" autoplay loop></video>
-		<canvas id="canvas"></canvas>
-		
-		<div id="box" class="overlay"></div>
-		<img src="images/glasses.png" id="glasses" class="overlay">
-		
-		<div id="options">
-			<h3>Select any object:</h3>
-			<img src="images/glasses.png" class="option">
-			<img src="images/g2.png" class="option">
-		</div>
-		<div>
-			<a id="capture" download="image.png">Capture</a>
-		</div>
-		<img src="" id="preview">
-		
-		<script src="js/objectdetect.js"></script>
-		<script src="js/objectdetect.frontalface.js"></script>
-		<script src="js/objectdetect.eye.js"></script>	
-		<script type="text/javascript">
-			
-			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-			window.URL = window.URL || window.webkitURL;
-			if (navigator.getUserMedia === undefined) {
-				alert("Browser doesn't support getUserMedia");
-			}
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="author" content="Marcel Klammer, Tastenkunst GmbH, 2015">
+	<meta name="description" content="Beyond Reality Face Nxt SDK - Javascript library for Face Tracking, Face Detection and Point Tracking">
 
-			window.onload = function(){
-				var video = document.getElementById('video'),
-				box = document.getElementById('glasses'),
-				canvas = document.getElementById('canvas'),
-				context = canvas.getContext('2d'),
-				detector, leftEyeDetector, rightEyeDetector, face, preCoordi = preLeftEye =  preRightEye = [0, 0, 0, 0],
-				 MIN_FACE_CHANGE = 1, MIN_EYE_CHANGE = 1, MIN_FACE_CONFI = 4, MIN_EYE_CONFI = 2, angle = 0;
+	<title>AR Photobooth</title>
 
-				navigator.getUserMedia({video: true}, function (stream) {
-					video.src = window.URL.createObjectURL(stream);
-					video.addEventListener('canplay', draw);
-				}, function() {});
+	<link rel="stylesheet" href="css/brf_examples.css">
 
-				function draw(){
-					if (video.paused) video.play();
-					if (video.readyState === video.HAVE_ENOUGH_DATA && video.videoWidth > 0) {
-						
-							canvas.width = video.videoWidth;
-							canvas.height = video.videoHeight;
-							context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-							
-							if (!detector){
-								detector = new objectdetect.detector((60 * video.videoWidth / video.videoHeight), 60, 1.1, objectdetect.frontalface);
-							}
-							var coords = detector.detect(canvas, 1);
-							
-							// check if face is detected
-							if(coords[0] && coords[0][4] > MIN_FACE_CONFI){								
-								console.log(coords[0]);
-								if (Math.abs(coords[0][0] - preCoordi[0]) > MIN_FACE_CHANGE || Math.abs(coords[0][1] - preCoordi[1]) > MIN_FACE_CHANGE){
-									preCoordi = coords[0];
-								} else{
-									coords[0] = preCoordi;
-								}
+	<!-- CreateJS: http://www.createjs.com -->
+	<script src="js/lib/createjs/easeljs-0.7.1.min.js"></script>
+	<script src="js/lib/createjs/preloadjs-0.4.1.min.js"></script>
+	<script src="js/lib/createjs/bitmapdata-1.0.1.min.js"></script>
 
-								var wFactor = video.videoWidth / detector.canvas.width,
-								hFactor = video.videoHeight / detector.canvas.height,
-								faceWidth = coords[0][2] * wFactor,
-								faceHeight = coords[0][3] * hFactor,
-								faceX = coords[0][0] * wFactor,
-								faceY = coords[0][1] * hFactor;
+	<!-- Beyond Reality Face Nxt SDK -->
+	<script>
+		//the acutal library object, mandatory
+		var nxtjs = {
+			memoryInitializerPrefixURL: "js/lib/brf/" // + BRF_NXT_v3.x.y_trial.js.mem is done in the other js file.
+		};
+	</script>
+	<script src="js/lib/brf/BRF_NXT_public_API.js"></script>
+	<script src="js/lib/brf/BRF_NXT_JS_TK200215_v3.0.16_trial.js"></script>	
+	<script src="js/examples/ExampleBase.js"></script>
+	
+	<!-- <script src="js/examples/ExamplePointTracking.js"></script> -->
+	<!-- <script src="js/examples/ExampleFaceDetection.js"></script> -->
+	<!-- <script src="js/examples/ExampleFaceTracking.js"></script> -->
+	<script src="js/examples/ExampleCandideTracking.js"></script>
+</head>
 
-								if (!leftEyeDetector){
-									leftEyeDetector = new objectdetect.detector((60 * faceWidth / faceHeight), 60, 1.1, objectdetect.eye);
-								}
-								if (!rightEyeDetector){
-									rightEyeDetector = new objectdetect.detector((60 * faceWidth / faceHeight), 60, 1.1, objectdetect.eye);
-								}
+<body onload="initExample();">
 
-								leftEye = leftEyeDetector.detect(canvas, 1, 1, [faceX, faceY, faceWidth/2, faceHeight/2]);
-								rightEye = rightEyeDetector.detect(canvas, 1, 1, [faceX + faceWidth /2, faceY, faceWidth/2, faceHeight/2]);
-								//console.log(leftEye);
-								//console.log(rightEye);
+	<canvas id="_stage" width="1280" height="720" style="position:absolute;left:0px;top:0px;">Your browser does not seem to support canvas elements.</canvas>
 
-								if (leftEye.length > 0 && (Math.abs(leftEye[0][0] - preLeftEye[0]) > MIN_EYE_CHANGE || Math.abs(leftEye[0][1] - preLeftEye[1]) > MIN_EYE_CHANGE)){
-									preLeftEye = leftEye[0];
-								} else{
-									leftEye[0] = preLeftEye;
-								}
-								if (rightEye.length > 0 && (Math.abs(rightEye[0][0] - preRightEye[0]) > MIN_EYE_CHANGE || Math.abs(rightEye[0][1] - preRightEye[1]) > MIN_EYE_CHANGE)){
-									preRightEye = rightEye[0];
-								} else{
-									rightEye[0] = preRightEye;
-								}
+	<!--
+		Chrome on Android v35+ supports getUserMedia! But the video needs to be started on user action.
+		This play button will be shown, if a user action is needed.
+	-->
+	<img src="media/assets/play.png" id="btPlay" style="display:none;position:absolute;top:165px;left:221px;"/>
 
-								if (leftEye[0][0] != 0){
-									var wf = faceWidth / (2 * 60 * faceWidth / faceHeight),
-									hf = faceHeight / (2 * 60);
-									if (rightEye[0][0] != 0)
-										angle =  Math.atan((rightEye[0][1]*hf - leftEye[0][1]*hf) / faceWidth);
-									// 	preAngle = angle;
-									// else
-									// 	angle = 0;
-
-									// draw single figure over eyes
-									context.rotate(angle);
-									context.drawImage(box, faceX + leftEye[0][0]*wf, faceY + leftEye[0][1]*hf, faceWidth*0.75, leftEye[0][2]*hf);
-									//context.rect(faceX + leftEye[0][0]*wf, faceY + leftEye[0][1]*hf , faceWidth*0.75, leftEye[0][3]*hf);
-									context.rotate(-angle);
-									
-									// draw box over both detected eyes
-									/*context.rect(faceX + leftEye[0][0]*wf, faceY + leftEye[0][1]*hf , leftEye[0][2]*wf, leftEye[0][3]*hf);
-									if (rightEye[0][0] != 0)
-										context.rect(faceX + faceWidth/2 + rightEye[0][0]*wf, faceY + rightEye[0][1]*hf , rightEye[0][2]*wf, rightEye[0][3]*hf);*/
-								}
-
-								//context.drawImage(box, video.offsetLeft + faceX + 0.125 * faceWidth, video.offsetTop + faceY + 0.31 * faceHeight, faceWidth * 0.75, faceWidth * 0.75 * box.height / box.width);
-								// to draw a box	
-								context.rect(faceX, faceY, faceWidth, faceHeight);
-								context.stroke();
-							}						
-					}
-					requestAnimationFrame(draw);
-				}
-
-				var options = document.getElementsByClassName('option');
-				for (var i = 0; i < options.length; i++) {
-					options[i].addEventListener('click', function(){
-						box.src = this.getAttribute('src');
-					});
-				}
-
-				document.getElementById('capture').addEventListener('click', function(){
-					var image = canvas.toDataURL('image/jpg');
-					var preview = document.getElementById('preview');
-					preview.src = image;
-					this.href = image;
-				});
-			}
-		</script>
-	</body>
+	<div id="brfLogo">
+		<a href="https://www.beyond-reality-face.com" target="_blank">
+			<img src="images/brf_nxt_logo_black.png" style="opacity:0.35;position:absolute;top:8px;right:9px;"/>
+			<img src="images/brf_nxt_logo_white.png" style="opacity:0.75;position:absolute;top:7px;right:8px;"/>
+		</a>
+	</div>
+</body>
 </html>
