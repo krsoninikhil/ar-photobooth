@@ -4,3 +4,7 @@ html, body {
 	height: 100%;
 	position: relative;
 }
+
+#options{ float: right;}
+.option{ float: left; width: 100px; border: 1px solid #343434;  margin-left: 20px;}
+#options h3{ margin-left: 20px; }

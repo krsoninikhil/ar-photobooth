@@ -88,6 +88,7 @@ function initExample() {
 			// Get the current BRFState and faceShape.
 			var state = _this._brfManager.state;
 			var faceShape = _this._brfManager.faceShape;
+			var img = new createjs.Bitmap(overlay);
 
 			// Draw BRFs region of interest, that got analysed:
 			lib.DrawingUtils.drawRect(_this._draw, _this._brfRoi, false, 1.0, "#acfeff", 1.0);
@@ -102,12 +103,30 @@ function initExample() {
 				if(rect != null && rect.width != 0) {
 					lib.DrawingUtils.drawRect(_this._draw, rect, false, 3.0, "#ff7900", 1.0);
 				}
+				ctx.clearRect(0 , 0, canvas.width, canvas.height);
 			} else if(state == lib.BRFState.FACE_TRACKING_START || state == lib.BRFState.FACE_TRACKING) {
 				// The found face rectangle got analysed in detail
 				// draw the faceShape and its bounds:
 				lib.DrawingUtils.drawTriangles(_this._draw, faceShape.faceShapeVertices, faceShape.faceShapeTriangles);
 				//lib.DrawingUtils.drawTrianglesAsPoints(_this._draw, faceShape.faceShapeVertices);
 				lib.DrawingUtils.drawRect(_this._draw, faceShape.bounds);
+				var v = faceShape.points,
+				angle = Math.atan((v[14].y - v[0].y) / (v[14].x - v[0].x));
+				img.x = v[0].x*2;
+				img.y = v[21].y*2;
+				img.rotation = angle*180/Math.PI;
+				img.scaleX = ((v[14].x - v[0].x) * 2)/overlay.width;
+				_this._container.removeChild(img);
+				_this._container.addChild(img);
+
+				/*var v = faceShape.points,
+				angle = Math.atan((v[14].y - v[0].y) / (v[14].x - v[0].x));
+				ctx.rotate(angle);
+				ctx.clearRect(0 , 0, canvas.width, canvas.height);
+				ctx.drawImage(overlay, v[0].x * 2, v[21].y * 2, (v[14].x - v[0].x) * 2, (v[38].y - v[22].y) * 2);
+				ctx.rotate(-angle);*/
+				//ctx.rect(v[0]*2, v[45]*2, v[28]*2 - v[0]*2, v[77]*2 - v[45]*2);
+				//ctx.stroke();
 			}
 		};
 

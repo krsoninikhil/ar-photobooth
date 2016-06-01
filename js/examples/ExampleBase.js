@@ -135,18 +135,18 @@ function initExample() {
 		// Here are some presets for a quick start:
 
 		// 240p camera resolution + 320x240 BRF roi + 320x240 face detection roi + doubled screenRect size to scale the video up
-//		_this._cameraResolution		= cameraResolution	|| new lib.Rectangle(   0,   0,  320, 240),	// Camera resolution
-//		_this._brfResolution		= brfResolution		|| new lib.Rectangle(   0,   0,  320, 240),	// BRF BitmapData size
-//		_this._brfRoi				= brfRoi			|| new lib.Rectangle(   0,   0,  320, 240),	// BRF region of interest within BRF BitmapData size
-//		_this._faceDetectionRoi		= faceDetectionRoi	|| new lib.Rectangle(   0,   0,  320, 240),	// BRF face detection region of interest within BRF BitmapData size
-//		_this._screenRect			= screenRect		|| new lib.Rectangle(   0,   0,  640, 480),	// Shown video screen rectangle
+		_this._cameraResolution		= cameraResolution	|| new lib.Rectangle(   0,   0,  320, 240),	// Camera resolution
+		_this._brfResolution		= brfResolution		|| new lib.Rectangle(   0,   0,  320, 240),	// BRF BitmapData size
+		_this._brfRoi				= brfRoi			|| new lib.Rectangle(   0,   0,  320, 240),	// BRF region of interest within BRF BitmapData size
+		_this._faceDetectionRoi		= faceDetectionRoi	|| new lib.Rectangle(   0,   0,  320, 240),	// BRF face detection region of interest within BRF BitmapData size
+		_this._screenRect			= screenRect		|| new lib.Rectangle(   0,   0,  640, 480),	// Shown video screen rectangle
 		
 		// 480p camera resolution + 480x400 BRF roi + 320x320 centered face detection roi + 480p screenRect
-		_this._cameraResolution		= cameraResolution	|| new lib.Rectangle(   0,   0,  640, 480),	// Camera resolution
-		_this._brfResolution		= brfResolution		|| new lib.Rectangle(   0,   0,  640, 480),	// BRF BitmapData size
-		_this._brfRoi				= brfRoi			|| new lib.Rectangle(  80,  40,  480, 400),	// BRF region of interest within BRF BitmapData size
-		_this._faceDetectionRoi		= faceDetectionRoi	|| new lib.Rectangle( 160,  80,  320, 320),	// BRF face detection region of interest within BRF BitmapData size
-		_this._screenRect			= screenRect		|| new lib.Rectangle(   0,   0,  640, 480),	// Shown video screen rectangle
+		// _this._cameraResolution		= cameraResolution	|| new lib.Rectangle(   0,   0,  640, 480),	// Camera resolution
+		// _this._brfResolution		= brfResolution		|| new lib.Rectangle(   0,   0,  640, 480),	// BRF BitmapData size
+		// _this._brfRoi				= brfRoi			|| new lib.Rectangle(  80,  40,  480, 400),	// BRF region of interest within BRF BitmapData size
+		// _this._faceDetectionRoi		= faceDetectionRoi	|| new lib.Rectangle( 160,  80,  320, 320),	// BRF face detection region of interest within BRF BitmapData size
+		// _this._screenRect			= screenRect		|| new lib.Rectangle(   0,   0,  640, 480),	// Shown video screen rectangle
 		
 		// 720p camera resolution + 520x400 BRF roi + 320x320 face detection roi + 720p screenRect
 //		_this._cameraResolution		= cameraResolution	|| new lib.Rectangle(   0,   0, 1280, 720),	// Camera resolution

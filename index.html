@@ -5,9 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="author" content="Marcel Klammer, Tastenkunst GmbH, 2015">
 	<meta name="description" content="Beyond Reality Face Nxt SDK - Javascript library for Face Tracking, Face Detection and Point Tracking">
-
 	<title>AR Photobooth</title>
-
 	<link rel="stylesheet" href="css/brf_examples.css">
 
 	<!-- CreateJS: http://www.createjs.com -->
@@ -21,6 +19,20 @@
 		var nxtjs = {
 			memoryInitializerPrefixURL: "js/lib/brf/" // + BRF_NXT_v3.x.y_trial.js.mem is done in the other js file.
 		};
+		window.onload = function () {
+
+			overlay = document.getElementById('overlay');
+			canvas = document.getElementById('canvas');
+			ctx = canvas.getContext('2d');
+
+			var options = document.getElementsByClassName('option');
+			for (var i = 0; i < options.length; i++) {
+				options[i].addEventListener('click', function(){
+					box.src = this.getAttribute('src');
+				});
+			}
+
+		}
 	</script>
 	<script src="js/lib/brf/BRF_NXT_public_API.js"></script>
 	<script src="js/lib/brf/BRF_NXT_JS_TK200215_v3.0.16_trial.js"></script>	
@@ -28,24 +40,27 @@
 	
 	<!-- <script src="js/examples/ExamplePointTracking.js"></script> -->
 	<!-- <script src="js/examples/ExampleFaceDetection.js"></script> -->
-	<!-- <script src="js/examples/ExampleFaceTracking.js"></script> -->
-	<script src="js/examples/ExampleCandideTracking.js"></script>
+	<script src="js/examples/ExampleFaceTracking.js"></script>
+	<!-- <script src="js/examples/ExampleCandideTracking.js"></script> -->
 </head>
 
 <body onload="initExample();">
 
 	<canvas id="_stage" width="1280" height="720" style="position:absolute;left:0px;top:0px;">Your browser does not seem to support canvas elements.</canvas>
+	<canvas id="canvas" width="1280" height="720" style="position:absolute;left:0px;top:0px;z-index:5;"></canvas>
 
-	<!--
-		Chrome on Android v35+ supports getUserMedia! But the video needs to be started on user action.
-		This play button will be shown, if a user action is needed.
-	-->
-	<img src="media/assets/play.png" id="btPlay" style="display:none;position:absolute;top:165px;left:221px;"/>
-
+	<!--  play button for chrome on android v35+ -->
+	<img src="images/play.png" id="btPlay" style="display:none;position:absolute;top:165px;left:221px;"/>
+	<img src="images/glasses.png" id="overlay" />
+	<div id="options">
+		<h3>Select any object:</h3>
+		<img src="images/glasses.png" class="option glasses">
+		<img src="images/g2.png" class="option glasses">
+	</div>
 	<div id="brfLogo">
 		<a href="https://www.beyond-reality-face.com" target="_blank">
-			<img src="images/brf_nxt_logo_black.png" style="opacity:0.35;position:absolute;top:8px;right:9px;"/>
-			<img src="images/brf_nxt_logo_white.png" style="opacity:0.75;position:absolute;top:7px;right:8px;"/>
+			<img src="images/brf_nxt_logo_black.png" style="opacity:0.35;position:absolute;bottom:8px;right:9px;"/>
+			<img src="images/brf_nxt_logo_white.png" style="opacity:0.75;position:absolute;bottom:7px;right:8px;"/>
 		</a>
 	</div>
 </body>
