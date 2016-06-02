@@ -22,16 +22,18 @@
 		window.onload = function () {
 
 			overlay = document.getElementById('overlay');
-			canvas = document.getElementById('canvas');
-			ctx = canvas.getContext('2d');
+			img = new createjs.Bitmap(overlay);
 
 			var options = document.getElementsByClassName('option');
 			for (var i = 0; i < options.length; i++) {
 				options[i].addEventListener('click', function(){
-					box.src = this.getAttribute('src');
+					overlay.src = this.getAttribute('src');
+					img.alpha = 0;
+					img = new createjs.Bitmap(overlay);
 				});
 			}
 
+			initExample();
 		}
 	</script>
 	<script src="js/lib/brf/BRF_NXT_public_API.js"></script>
@@ -44,10 +46,8 @@
 	<!-- <script src="js/examples/ExampleCandideTracking.js"></script> -->
 </head>
 
-<body onload="initExample();">
-
-	<canvas id="_stage" width="1280" height="720" style="position:absolute;left:0px;top:0px;">Your browser does not seem to support canvas elements.</canvas>
-	<canvas id="canvas" width="1280" height="720" style="position:absolute;left:0px;top:0px;z-index:5;"></canvas>
+<body>
+	<canvas id="_stage" width="1280" height="720">Your browser does not seem to support canvas elements.</canvas>
 
 	<!--  play button for chrome on android v35+ -->
 	<img src="images/play.png" id="btPlay" style="display:none;position:absolute;top:165px;left:221px;"/>
