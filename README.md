@@ -6,6 +6,10 @@ Many open and free libraries are available for object detection and tracking on 
 - [headtrackr.js](https://github.com/auduno/headtrackr)
 - [tracking.js](https://github.com/eduardolundgren/trackingjs.com)
 
+## Update
+
+Beyond Face Reality Nxt. is providing many feature points of the face with much better precision, using it in `using-brf-nxt` branch -- best so far.
+
 To test, these files needs to be on a server, may be localhost.
 
 - In `index.html`, I've only eliminated the use of `compatibility.js` and `smoother.js`.
