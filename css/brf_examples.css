@@ -4,9 +4,10 @@ html, body {
 	height: 100%;
 	position: relative;
 }
-
 #options{ float: right;}
 .option{ float: left; width: 100px; border: 1px solid #343434;  margin-left: 20px;}
 #options h3{ margin-left: 20px; }
 #overlay{ display: none; }
+#capture{ position: absolute; bottom: 20px; left: 10px; }
 #_stage{ position:absolute;left:0px;top:0px; z-index: -2; }
+img#preview{ width: 870px; }

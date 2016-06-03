@@ -7,12 +7,12 @@
 	<meta name="description" content="Beyond Reality Face Nxt SDK - Javascript library for Face Tracking, Face Detection and Point Tracking">
 	<title>AR Photobooth</title>
 	<link rel="stylesheet" href="css/brf_examples.css">
-
-	<!-- CreateJS: http://www.createjs.com -->
 	<script src="js/lib/createjs/easeljs-0.7.1.min.js"></script>
 	<script src="js/lib/createjs/preloadjs-0.4.1.min.js"></script>
 	<script src="js/lib/createjs/bitmapdata-1.0.1.min.js"></script>
-
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<script src="js/lib/jquery-1.10.2.js"></script>
+	<script src="js/lib/bootstrap.min.js"></script>
 	<!-- Beyond Reality Face Nxt SDK -->
 	<script>
 		//the acutal library object, mandatory
@@ -35,12 +35,19 @@
 			wf = 1280/640,
 			hf = 720/480;
 			initExample();
+
+			document.getElementById('capture').addEventListener('click', function(){
+				pic = document.getElementById('_stage').toDataURL();
+				document.getElementById('preview').src = pic;
+			});
+			document.getElementById('save').addEventListener('click', function(){
+				this.href = pic;
+			});			
 		}
 	</script>
 	<script src="js/lib/brf/BRF_NXT_public_API.js"></script>
 	<script src="js/lib/brf/BRF_NXT_JS_TK200215_v3.0.16_trial.js"></script>	
 	<script src="js/examples/ExampleBase.js"></script>
-	
 	<!-- <script src="js/examples/ExamplePointTracking.js"></script> -->
 	<!-- <script src="js/examples/ExampleFaceDetection.js"></script> -->
 	<script src="js/examples/ExampleFaceTracking.js"></script>
@@ -51,18 +58,35 @@
 	<canvas id="_stage" width="1280" height="720">Your browser does not seem to support canvas elements.</canvas>
 
 	<!--  play button for chrome on android v35+ -->
-	<img src="images/play.png" id="btPlay" style="display:none;position:absolute;top:165px;left:221px;"/>
 	<img src="images/glasses.png" id="overlay" />
 	<div id="options">
 		<h3>Select any object:</h3>
 		<img src="images/glasses.png" class="option glasses">
 		<img src="images/g2.png" class="option glasses">
 	</div>
+	<button class="btn btn-success" id="capture" data-toggle="modal" data-target="#myModal">Capture</button>
+	
+	<img src="images/play.png" id="btPlay" style="display:none;position:absolute;top:165px;left:221px;"/>
 	<div id="brfLogo">
 		<a href="https://www.beyond-reality-face.com" target="_blank">
 			<img src="images/brf_nxt_logo_black.png" style="opacity:0.35;position:absolute;bottom:8px;right:9px;"/>
 			<img src="images/brf_nxt_logo_white.png" style="opacity:0.75;position:absolute;bottom:7px;right:8px;"/>
 		</a>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-body">
+	       	<img src="" id="preview" />
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <a type="button" class="btn btn-primary" id="save" download="tagbin-ar-photobooth.png">Save Picture</a>
+	      </div>
+	    </div>
+	  </div>
 	</div>
 </body>
 </html>
