@@ -116,11 +116,11 @@ function initExample() {
 				var v = faceShape.points,
 				angle = Math.atan((v[14].y - v[0].y) / (v[14].x - v[0].x));
 				img.alpha = 1;
-				img.x = v[0].x*2;
-				img.y = v[21].y*2;
+				img.x = v[21].x*wf;
+				img.y = v[21].y*hf;
 				img.rotation = angle*180/Math.PI;
-				img.scaleX = ((v[14].x - v[0].x) * 2)/overlay.width;
-				//img.scaleY = ((v[38].y - v[21].y) * 2)/overlay.height;
+				img.scaleX = ((v[13].x - v[21].x) * wf)/overlay.width;
+				//img.scaleY = ((v[38].y - v[21].y) * hf)/overlay.height;
 			}
 		};
 
